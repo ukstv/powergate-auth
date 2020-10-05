@@ -1,0 +1,10 @@
+{
+  "name": "powergate-auth",
+  "private": true,
+  "version": "0.0.1",
+  "author": "Sergey Ukustov <sergey@ukstv.me>",
+  "license": "(MIT OR Apache-2.0)",
+  "devDependencies": {
+    "typescript": "^4.0.3"
+  }
+}
