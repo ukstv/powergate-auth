@@ -1,10 +1,63 @@
-import React, { useContext } from "react";
-import { useWallet, UseWalletProvider } from "use-wallet";
+import React, { useContext, useState } from "react";
+import { EthereumAuthProvider } from "./ethereum-auth-provider";
+import * as sha256 from "@stablelib/sha256";
+import CeramicClient from "@ceramicnetwork/ceramic-http-client";
+import IdentityWallet from "identity-wallet";
+import { definitions, schemas } from "@ceramicstudio/idx-constants";
+import { IDX } from "@ceramicstudio/idx";
 
-type DidContext = {
+const CERAMIC_API = "https://ceramic.3boxlabs.com";
+
+export enum Status {
+  VOID = "VOID",
+  ERROR = "ERROR",
+  REQUESTING = "REQUESTING",
+  CONNECTED = "CONNECTED",
+}
+
+export class UnreachableStatusError extends Error {
+  constructor(status: never) {
+    super(`Invalid status: ${status}`);
+  }
+}
+
+interface DataVoid {
+  status: Status.VOID;
+}
+
+interface ContextVoid extends DataVoid {
   connect(): void;
-  did: string | null;
-};
+}
+
+interface DataError {
+  status: Status.ERROR;
+  error: string;
+}
+
+interface ContextError extends DataError {
+  connect(): void;
+}
+
+interface DataRequesting {
+  status: Status.REQUESTING;
+}
+
+interface ContextRequesting extends DataRequesting {}
+
+interface DataConnected {
+  status: Status.CONNECTED;
+  id: string;
+}
+
+interface ContextConnected extends DataConnected {}
+
+type DidContext =
+  | ContextVoid
+  | ContextError
+  | ContextRequesting
+  | ContextConnected;
+
+type DidContextData = DataError | DataRequesting | DataConnected | DataVoid;
 
 const DidContext = React.createContext<DidContext | null>(null);
 
@@ -19,52 +72,90 @@ export function useDID(): DidContext {
   }
 }
 
-function DidProviderWrap(props: React.PropsWithChildren<{}>) {
-  const wallet = useWallet();
-  const didContext = useContext(DidContext);
-
-  let context: DidContext;
-
-  if (wallet.account && wallet.ethereum) {
-    if (didContext && didContext.did) {
-      // Authenticated
-      context = didContext;
-    } else {
-      // Require authentication
-      const message = 'Add this account as a Ceramic authentication method'
-
-      context = {
-        connect: () => {
-          // Do Nothing. Already connected
-        },
-        did: null,
-      };
-    }
-  } else {
-    context = {
-      did: null,
-      connect: () => {
-        wallet
-          .connect("injected")
-          .then(() => {
-            // Do Nothing
-          })
-          .catch(() => {
-            // Do Nothing
-          });
-      },
-    };
-  }
-
-  return (
-    <DidContext.Provider value={context}>{props.children}</DidContext.Provider>
-  );
-}
-
 export function DidProvider(props: React.PropsWithChildren<{}>) {
+  const [state, setState] = useState<DidContextData>({ status: Status.VOID });
+  const [identityWallet, setIdentityWallet] = useState(null);
+  const [idx, setIdx] = useState(null);
+
+  const ceramic = new CeramicClient(CERAMIC_API);
+
+  const requestIdentity = async (ethereum: any): Promise<string> => {
+    const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+    const account = accounts[0];
+    const authProvider = new EthereumAuthProvider(ethereum, account);
+    const message = "Add this account as a Ceramic authentication method";
+    const authSecret = await authProvider.authenticate(message);
+    const hex = authSecret.slice(2);
+    const bytes = new Uint8Array(hex.match(/../g).map((b) => parseInt(b, 16)));
+    const entropy = sha256.hash(bytes);
+    const getPermission = async () => [];
+    const idw = await IdentityWallet.create({
+      getPermission,
+      ceramic: ceramic,
+      authSecret: entropy,
+      authId: account,
+    });
+    setIdentityWallet(idw);
+    const didProvider = idw.getDidProvider();
+    await ceramic.setDIDProvider(didProvider);
+    // @ts-ignore
+    const idx = new IDX({ ceramic: ceramic, definitions, schemas });
+    setIdx(idx);
+    return idx.did.id;
+  };
+
+  const connect = () => {
+    const isMetaMaskAvailable =
+      typeof window !== "undefined" &&
+      typeof (window as any).ethereum !== "undefined";
+    if (isMetaMaskAvailable) {
+      const ethereum = (window as any).ethereum;
+      setState({
+        status: Status.REQUESTING,
+      });
+      requestIdentity(ethereum)
+        .then((did) => {
+          setState({
+            status: Status.CONNECTED,
+            id: did,
+          });
+        })
+        .catch((error) => {
+          setState({
+            status: Status.ERROR,
+            error: error.message,
+          });
+        });
+    } else {
+      setState({
+        status: Status.ERROR,
+        error: "MetaMask is not installed",
+      });
+    }
+  };
+
+  const providerContext: () => DidContext = () => {
+    switch (state.status) {
+      case Status.VOID:
+        return {
+          ...state,
+          connect: connect,
+        };
+      case Status.REQUESTING:
+        return state;
+      case Status.ERROR:
+        return {
+          ...state,
+          connect: connect,
+        };
+      case Status.CONNECTED:
+        return state;
+    }
+  };
+
   return (
-    <UseWalletProvider chainId={1}>
-      <DidProviderWrap>{props.children}</DidProviderWrap>
-    </UseWalletProvider>
+    <DidContext.Provider value={providerContext()}>
+      {props.children}
+    </DidContext.Provider>
   );
 }

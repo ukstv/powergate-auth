@@ -8,11 +8,16 @@
     "start": "next start"
   },
   "dependencies": {
+    "@ceramicnetwork/ceramic-http-client": "^0.6.3",
+    "@ceramicstudio/idx": "^0.1.0",
+    "@ceramicstudio/idx-constants": "^0.1.0",
     "@react-typed-hooks/use-key-press": "^1.0.0",
+    "@stablelib/sha256": "^1.0.0",
     "@toruslabs/torus-embed": "^1.8.5",
     "@ukstv/3id-blockchain-utils": "^1.1.0",
     "authereum": "^0.0.4-beta.201",
     "caip": "^0.9.2",
+    "dids": "^0.5.0",
     "identity-wallet": "2.0.0-alpha.11",
     "next": "9.4.4",
     "next-images": "^1.6.0",
