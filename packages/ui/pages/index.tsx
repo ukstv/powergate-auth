@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { HolyGrailLayout } from "../lib/styling/holy-grail-layout";
 
 import {
   ContextConnected,
@@ -6,6 +7,7 @@ import {
   UnreachableStatusError,
   useDID,
 } from "../lib/use-did";
+import { Header } from "../lib/styling/header";
 
 export default function Home() {
   const did = useDID();
@@ -77,10 +79,17 @@ export default function Home() {
   };
 
   return (
-    <>
-      <div>{renderConnectButton()}</div>
-      <div>{renderAuth()}</div>
-      <div>{renderLs()}</div>
-    </>
+    <HolyGrailLayout.Container>
+      <Header/>
+      <HolyGrailLayout.Main>
+        <HolyGrailLayout.Left>Left</HolyGrailLayout.Left>
+        <HolyGrailLayout.Body>
+          <div>{renderConnectButton()}</div>
+          <div>{renderAuth()}</div>
+          <div>{renderLs()}</div>
+        </HolyGrailLayout.Body>
+        <HolyGrailLayout.Right>Right</HolyGrailLayout.Right>
+      </HolyGrailLayout.Main>
+    </HolyGrailLayout.Container>
   );
 }
