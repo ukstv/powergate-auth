@@ -49,7 +49,9 @@ interface DataConnected {
   id: string;
 }
 
-interface ContextConnected extends DataConnected {}
+export interface ContextConnected extends DataConnected {
+  createJWS(payload: object): Promise<string>;
+}
 
 type DidContext =
   | ContextVoid
@@ -75,7 +77,7 @@ export function useDID(): DidContext {
 export function DidProvider(props: React.PropsWithChildren<{}>) {
   const [state, setState] = useState<DidContextData>({ status: Status.VOID });
   const [identityWallet, setIdentityWallet] = useState(null);
-  const [idx, setIdx] = useState(null);
+  const [idx, setIdx] = useState<IDX>(null);
 
   const ceramic = new CeramicClient(CERAMIC_API);
 
@@ -149,7 +151,12 @@ export function DidProvider(props: React.PropsWithChildren<{}>) {
           connect: connect,
         };
       case Status.CONNECTED:
-        return state;
+        return {
+          ...state,
+          createJWS: async (payload: object) => {
+            return idx.did.createJWS(payload);
+          },
+        };
     }
   };
 

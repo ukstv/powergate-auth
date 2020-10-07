@@ -1,8 +1,14 @@
-import React from "react";
-import { Status, UnreachableStatusError, useDID } from "../lib/use-did";
+import React, { useState } from "react";
+import {
+  ContextConnected,
+  Status,
+  UnreachableStatusError,
+  useDID,
+} from "../lib/use-did";
 
 export default function Home() {
   const did = useDID();
+  const [authToken, setAuthToken] = useState(null);
 
   const renderConnectButton = () => {
     switch (did.status) {
@@ -24,5 +30,52 @@ export default function Home() {
     }
   };
 
-  return <div>{renderConnectButton()}</div>;
+  const requestAuth = async (did: ContextConnected) => {
+    const authRequest = await fetch(
+      `http://localhost:3000/auth?id=${did.id}`
+    ).then((r) => r.text());
+    const tokenRequest = await did.createJWS({ request: authRequest });
+    const authToken = await fetch(`http://localhost:3000/auth`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ tokenRequest: tokenRequest }),
+    }).then((t) => t.text());
+    setAuthToken(authToken);
+  };
+
+  const renderAuth = () => {
+    if (did.status === Status.CONNECTED && !authToken) {
+      return (
+        <>
+          <button onClick={() => requestAuth(did)}>Authenticate</button>;
+        </>
+      );
+    }
+  };
+
+  const doLs = async () => {
+    const ls = await fetch(`http://localhost:3000/ls`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${authToken}`,
+      },
+    }).then((t) => t.text());
+    console.log('ls', ls)
+  }
+
+  const renderLs = () => {
+    if (authToken) {
+      return <div><button onClick={doLs}>ls</button></div>
+    }
+  }
+
+  return (
+    <>
+      <div>{renderConnectButton()}</div>
+      <div>{renderAuth()}</div>
+      <div>{renderLs()}</div>
+    </>
+  );
 }
