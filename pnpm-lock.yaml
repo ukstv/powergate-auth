@@ -117,6 +117,7 @@ importers:
       next-images: 1.6.0
       react: 16.13.1
       react-dom: 16.13.1_react@16.13.1
+      rxjs: 6.6.3
       slate-react-system: 0.1.0
       styled-components: 5.2.0_975908421a0f349b287d23c767f90c42
       use-wallet: 0.8.0_react@16.13.1
@@ -151,6 +152,7 @@ importers:
       next-images: ^1.6.0
       react: 16.13.1
       react-dom: 16.13.1
+      rxjs: ^6.6.3
       slate-react-system: ^0.1.0
       styled-components: ^5.2.0
       use-wallet: ^0.8.0
@@ -16937,7 +16939,7 @@ packages:
       integrity: sha512-WfQI+1gohdf0Dai/Bbmk5L5ItH5tYqm3ki2c5GdWhKjalzjg93N3avFjVStyZZz+A2Em+ZxKH5bNghw9UeylGQ==
   /rxjs/6.6.3:
     dependencies:
-      tslib: 1.13.0
+      tslib: 1.14.0
     engines:
       npm: '>=2.0.0'
     resolution:
@@ -18629,7 +18631,6 @@ packages:
     resolution:
       integrity: sha512-i/6DQjL8Xf3be4K/E6Wgpekn5Qasl1usyw++dAA35Ue5orEn65VIxOA+YvNNl9HV3qv70T7CNwjODHZrLwvd1Q==
   /tslib/1.14.0:
-    dev: false
     resolution:
       integrity: sha512-+Zw5lu0D9tvBMjGP8LpvMb0u2WW2QV3y+D8mO6J+cNzCYIN4sVy43Bf9vl92nqFahutN0I8zHa7cc4vihIshnw==
   /tslib/2.0.1:

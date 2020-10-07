@@ -3,6 +3,9 @@ import { Global, css } from "@emotion/core";
 import { DidProvider } from "../lib/use-did";
 import emotionNormalize from "emotion-normalize";
 import { GlobalNotification, GlobalTooltip } from "slate-react-system";
+import { UseBackendProvider } from "../lib/use-backend";
+
+const TODO_BACKEND_ENDPOINT = "http://localhost:3000";
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -15,7 +18,9 @@ function MyApp({ Component, pageProps }) {
       <GlobalTooltip />
       <GlobalNotification style={{ bottom: 0, right: 0 }} />
       <DidProvider>
-        <Component {...pageProps} />
+        <UseBackendProvider endpoint={TODO_BACKEND_ENDPOINT}>
+          <Component {...pageProps} />
+        </UseBackendProvider>
       </DidProvider>
     </>
   );

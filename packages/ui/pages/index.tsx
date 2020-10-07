@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { HolyGrailLayout } from "../lib/styling/holy-grail-layout";
 
-import {
-  ContextConnected,
-  Status,
-  UnreachableStatusError,
-  useDID,
-} from "../lib/use-did";
+import { ContextConnected, useDID } from "../lib/use-did";
+import { Status, UnreachableStatusError } from "../lib/use-did.service";
 import { Header } from "../lib/styling/header";
 
 export default function Home() {
@@ -20,11 +16,11 @@ export default function Home() {
       case Status.ERROR:
         return (
           <div>
-            <div>Oops, error: {did.error}</div>
+            <div>Oops, error</div>
             <button onClick={() => did.connect()}>Connect Again</button>
           </div>
         );
-      case Status.REQUESTING:
+      case Status.PROGRESS:
         return <div>Connecting...</div>;
       case Status.VOID:
         return <button onClick={() => did.connect()}>Connect</button>;
@@ -80,7 +76,7 @@ export default function Home() {
 
   return (
     <HolyGrailLayout.Container>
-      <Header/>
+      <Header />
       <HolyGrailLayout.Main>
         <HolyGrailLayout.Left>Left</HolyGrailLayout.Left>
         <HolyGrailLayout.Body>
