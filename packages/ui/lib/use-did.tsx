@@ -1,10 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { EthereumAuthProvider } from "./ethereum-auth-provider";
 import * as sha256 from "@stablelib/sha256";
 import CeramicClient from "@ceramicnetwork/ceramic-http-client";
 import IdentityWallet from "identity-wallet";
 import { definitions, schemas } from "@ceramicstudio/idx-constants";
 import { IDX } from "@ceramicstudio/idx";
+import { ThreeIdConnect } from "3id-connect";
+import { DID } from "dids";
 
 const CERAMIC_API = "https://ceramic.3boxlabs.com";
 
@@ -78,6 +80,16 @@ export function DidProvider(props: React.PropsWithChildren<{}>) {
   const [state, setState] = useState<DidContextData>({ status: Status.VOID });
   const [identityWallet, setIdentityWallet] = useState(null);
   const [idx, setIdx] = useState<IDX>(null);
+  const [threeIdConnect, setThreeIdConnect] = useState<ThreeIdConnect | null>(
+    null
+  );
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && !threeIdConnect) {
+      const tt = new ThreeIdConnect("https://3idconnect.org/index.html");
+      setThreeIdConnect(tt);
+    }
+  }, [threeIdConnect]);
 
   const ceramic = new CeramicClient(CERAMIC_API);
 
@@ -85,6 +97,13 @@ export function DidProvider(props: React.PropsWithChildren<{}>) {
     const accounts = await ethereum.request({ method: "eth_requestAccounts" });
     const account = accounts[0];
     const authProvider = new EthereumAuthProvider(ethereum, account);
+    // await threeIdConnect.connect(authProvider);
+    // const didProvider = await threeIdConnect.getDidProvider();
+    //
+    // const did = new DID({ provider: didProvider });
+    //
+    // await did.authenticate();
+    // return did.id
     const message = "Add this account as a Ceramic authentication method";
     const authSecret = await authProvider.authenticate(message);
     const hex = authSecret.slice(2);

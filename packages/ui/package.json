@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "3id-connect": "^1.0.0-alpha.0",
     "@ceramicnetwork/ceramic-http-client": "^0.6.3",
     "@ceramicstudio/idx": "^0.1.0",
     "@ceramicstudio/idx-constants": "^0.1.0",

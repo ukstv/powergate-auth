@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
 import {
   ContextConnected,
   Status,
@@ -59,17 +60,21 @@ export default function Home() {
     const ls = await fetch(`http://localhost:3000/ls`, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${authToken}`,
+        Authorization: `Bearer ${authToken}`,
       },
     }).then((t) => t.text());
-    console.log('ls', ls)
-  }
+    console.log("ls", ls);
+  };
 
   const renderLs = () => {
     if (authToken) {
-      return <div><button onClick={doLs}>ls</button></div>
+      return (
+        <div>
+          <button onClick={doLs}>ls</button>
+        </div>
+      );
     }
-  }
+  };
 
   return (
     <>
