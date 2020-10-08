@@ -4,6 +4,7 @@ import { DidProvider } from "../lib/use-did";
 import emotionNormalize from "emotion-normalize";
 import { GlobalNotification, GlobalTooltip } from "slate-react-system";
 import { UseBackendProvider } from "../lib/use-backend";
+import { CeramicProvider } from "../lib/ceramic-connection";
 
 const TODO_BACKEND_ENDPOINT = "http://localhost:3000";
 
@@ -17,11 +18,13 @@ function MyApp({ Component, pageProps }) {
       />
       <GlobalTooltip />
       <GlobalNotification style={{ bottom: 0, right: 0 }} />
-      <DidProvider>
-        <UseBackendProvider endpoint={TODO_BACKEND_ENDPOINT}>
-          <Component {...pageProps} />
-        </UseBackendProvider>
-      </DidProvider>
+      <CeramicProvider endpoint={"https://ceramic.3boxlabs.com"}>
+        <DidProvider>
+          <UseBackendProvider endpoint={TODO_BACKEND_ENDPOINT}>
+            <Component {...pageProps} />
+          </UseBackendProvider>
+        </DidProvider>
+      </CeramicProvider>
     </>
   );
 }

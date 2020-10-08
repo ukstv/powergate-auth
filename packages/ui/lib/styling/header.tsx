@@ -1,10 +1,11 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useContext } from "react";
 import styled from "@emotion/styled";
 import { HolyGrailLayout } from "./holy-grail-layout";
 import { CeramicConnectButton } from "../ceramic-connect-button";
 import * as Ethereum from "../ethereum-connection";
 import { UnreachableCaseError } from "../unreachable-case-error";
 import * as System from "slate-react-system";
+import { EthereumContext, useEthereum } from "../ethereum-connection";
 import { useSubject } from "../plumbing/use-subject";
 
 const Element = styled(HolyGrailLayout.Main)`
@@ -17,10 +18,11 @@ const Right = styled.div`
 `;
 
 export function ConnectEthereumButton() {
-  const ethereum = useSubject(Ethereum.state$);
+  const ethereum = useEthereum()
+  const state = useSubject(ethereum);
 
   const connect = () => {
-    Ethereum.connect$().subscribe({
+    ethereum.connect$().subscribe({
       error: (error) => {
         System.dispatchCustomEvent({
           name: "create-notification",
@@ -35,9 +37,9 @@ export function ConnectEthereumButton() {
     });
   };
 
-  switch (ethereum.status) {
+  switch (state.status) {
     case Ethereum.Status.CONNECTED:
-      return <p>{ethereum.account}</p>;
+      return <p>{state.account}</p>;
     case Ethereum.Status.PROGRESS:
       return <System.LoaderCircles />;
     case Ethereum.Status.DISCONNECTED:
@@ -45,7 +47,7 @@ export function ConnectEthereumButton() {
         <System.ButtonPrimary onClick={connect}>Connect</System.ButtonPrimary>
       );
     default:
-      throw new UnreachableCaseError(ethereum);
+      throw new UnreachableCaseError(state);
   }
 }
 
@@ -54,7 +56,7 @@ export function Header(props: React.PropsWithChildren<{}>) {
     <Element>
       <HolyGrailLayout.Main>...</HolyGrailLayout.Main>
       <Right>
-        {/*<ConnectEthereumButton />*/}
+        <ConnectEthereumButton />
         <CeramicConnectButton />
       </Right>
     </Element>

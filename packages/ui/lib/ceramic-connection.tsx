@@ -10,6 +10,8 @@ import type { CeramicApi } from "@ceramicnetwork/ceramic-common";
 import CeramicClient from "@ceramicnetwork/ceramic-http-client";
 import { definitions, schemas } from "@ceramicstudio/idx-constants";
 import { InitSubject } from "./plumbing/init-subject";
+import React, { useContext } from "react";
+import { EthereumConnection, useEthereum } from "./ethereum-connection";
 
 const CERAMIC_API = "https://ceramic.3boxlabs.com";
 
@@ -36,16 +38,50 @@ export type ConnectedState = {
 
 export type State = DisconnectedState | ProgressState | ConnectedState;
 
-export const state$ = new InitSubject<State>({
-  status: Status.DISCONNECTED,
-});
+class CeramicConnection extends InitSubject<State> {
+  constructor(
+    readonly endpoint: string,
+    readonly ethereumConnection: EthereumConnection
+  ) {
+    super({ status: Status.DISCONNECTED });
+  }
 
-export async function connect(): Promise<{
-  ceramic: CeramicClient;
+  connect$() {
+    const progress = new BehaviorSubject<State>({ status: Status.PROGRESS });
+    const subscription = progress.subscribe(this);
+    connect(this.ethereumConnection, new CeramicClient(this.endpoint))
+      .then((results) => {
+        console.log("done connecting");
+        progress.next({
+          status: Status.CONNECTED,
+          did: results.did,
+          idx: results.idx,
+          ceramic: results.ceramic,
+        });
+        progress.complete();
+      })
+      .catch((error) => {
+        progress.next({
+          status: Status.DISCONNECTED,
+        });
+        subscription.unsubscribe();
+        progress.error(error);
+      });
+
+    return progress.asObservable();
+  }
+}
+
+export async function connect(
+  ethereumConnection: EthereumConnection,
+  ceramic: CeramicApi
+): Promise<{
+  ceramic: CeramicApi;
   idx: IDX;
   did: DID;
 }> {
-  const ethereum = await Ethereum.connect$()
+  const ethereum = await ethereumConnection
+    .connect$()
     .pipe(
       filter((s): s is Ethereum.ConnectedState => {
         return s.status === Ethereum.Status.CONNECTED;
@@ -69,7 +105,6 @@ export async function connect(): Promise<{
   const bytes = new Uint8Array(hex.match(/../g).map((b) => parseInt(b, 16)));
   const entropy = sha256.hash(bytes);
   const getPermission = async () => [];
-  const ceramic = new CeramicClient(CERAMIC_API);
   const identityWallet = await IdentityWallet.create({
     getPermission,
     ceramic: ceramic,
@@ -87,26 +122,26 @@ export async function connect(): Promise<{
   };
 }
 
-export function connect$() {
-  const progress = new BehaviorSubject<State>({ status: Status.PROGRESS });
-  const subscription = progress.subscribe(state$);
-  connect()
-    .then((results) => {
-      progress.next({
-        status: Status.CONNECTED,
-        did: results.did,
-        idx: results.idx,
-        ceramic: results.ceramic,
-      });
-      progress.complete();
-    })
-    .catch((error) => {
-      progress.next({
-        status: Status.DISCONNECTED,
-      });
-      subscription.unsubscribe();
-      progress.error(error);
-    });
+export const CeramicContext = React.createContext<CeramicConnection | null>(
+  null
+);
 
-  return progress.asObservable();
+export function useCeramic(): CeramicConnection {
+  const context = useContext(CeramicContext);
+  if (!context) {
+    throw new Error(`useCeramic() should be run under proper CeramicProvider`);
+  }
+  return context;
+}
+
+export function CeramicProvider(
+  props: React.PropsWithChildren<{ endpoint: string }>
+) {
+  const ethereum = useEthereum();
+  const ceramicConnection = new CeramicConnection(props.endpoint, ethereum);
+  return (
+    <CeramicContext.Provider value={ceramicConnection}>
+      {props.children}
+    </CeramicContext.Provider>
+  );
 }

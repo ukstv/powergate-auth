@@ -1,5 +1,8 @@
 import { BehaviorSubject, Observable } from "rxjs";
 import { InitSubject } from "./plumbing/init-subject";
+import React, { useContext } from "react";
+import { useSubject } from "./plumbing/use-subject";
+import ethereum from "@ukstv/3id-blockchain-utils/src/blockchains/ethereum";
 
 export enum Status {
   DISCONNECTED,
@@ -23,9 +26,36 @@ export type ConnectedState = {
 
 export type State = DisconnectedState | ProgressState | ConnectedState;
 
-export const state$ = new InitSubject<State>({
-  status: Status.DISCONNECTED,
-});
+export class EthereumConnection extends InitSubject<State> {
+  constructor() {
+    super({ status: Status.DISCONNECTED });
+  }
+
+  connect$(): Observable<State> {
+    const progress = new BehaviorSubject<State>({ status: Status.PROGRESS });
+    const subscription = progress.subscribe(this);
+    connect()
+      .then((connection) => {
+        progress.next({
+          status: Status.CONNECTED,
+          provider: connection.provider,
+          account: connection.account,
+        });
+        progress.complete();
+      })
+      .catch((error) => {
+        progress.next({
+          status: Status.DISCONNECTED,
+        });
+        subscription.unsubscribe();
+        progress.error(error);
+      });
+
+    return progress.asObservable();
+  }
+}
+
+export const connection$ = new EthereumConnection();
 
 async function connect(): Promise<{ provider: any; account: any }> {
   const isMetaMaskAvailable =
@@ -46,25 +76,8 @@ async function connect(): Promise<{ provider: any; account: any }> {
   }
 }
 
-export function connect$(): Observable<State> {
-  const progress = new BehaviorSubject<State>({ status: Status.PROGRESS });
-  const subscription = progress.subscribe(state$);
-  connect()
-    .then((connection) => {
-      progress.next({
-        status: Status.CONNECTED,
-        provider: connection.provider,
-        account: connection.account,
-      });
-      progress.complete();
-    })
-    .catch((error) => {
-      progress.next({
-        status: Status.DISCONNECTED,
-      });
-      subscription.unsubscribe();
-      progress.error(error);
-    });
+export const EthereumContext = React.createContext(new EthereumConnection());
 
-  return progress.asObservable();
+export function useEthereum(): EthereumConnection {
+  return useContext(EthereumContext);
 }

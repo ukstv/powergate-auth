@@ -3,8 +3,9 @@ import { Jazzicon } from "@ukstv/jazzicon-react";
 import styled from "@emotion/styled";
 import * as System from "slate-react-system";
 import * as CeramicConnection from "./ceramic-connection";
-import { useSubject } from "./plumbing/use-subject";
 import { UnreachableCaseError } from "./unreachable-case-error";
+import { useCeramic } from "./ceramic-connection";
+import { useSubject } from "./plumbing/use-subject";
 
 const LocalJazz = styled(Jazzicon)`
   width: 2.5rem;
@@ -20,11 +21,13 @@ function DidIcon(props: { id: string }) {
 }
 
 export function CeramicConnectButton() {
-  const ceramic = useSubject(CeramicConnection.state$);
+  const ceramic = useCeramic();
+  const state = useSubject(ceramic);
 
   const connect = () => {
-    CeramicConnection.connect$().subscribe({
+    ceramic.connect$().subscribe({
       error: (error) => {
+        console.error(error)
         System.dispatchCustomEvent({
           name: "create-notification",
           detail: {
@@ -38,7 +41,7 @@ export function CeramicConnectButton() {
     });
   };
 
-  switch (ceramic.status) {
+  switch (state.status) {
     case CeramicConnection.Status.DISCONNECTED:
       return (
         <System.ButtonPrimary onClick={connect}>Connect</System.ButtonPrimary>
@@ -46,8 +49,8 @@ export function CeramicConnectButton() {
     case CeramicConnection.Status.PROGRESS:
       return <System.LoaderCircles />;
     case CeramicConnection.Status.CONNECTED:
-      return <p>{ceramic.did.id}</p>;
+      return <p>{state.did.id}</p>;
     default:
-      throw new UnreachableCaseError(ceramic);
+      throw new UnreachableCaseError(state);
   }
 }
