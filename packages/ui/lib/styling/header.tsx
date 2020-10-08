@@ -1,9 +1,8 @@
 import React, { useCallback, useContext, useState } from "react";
 import styled from "@emotion/styled";
 import { HolyGrailLayout } from "./holy-grail-layout";
-import { AuthenticationEntry } from "../authentication-entry";
+import { CeramicConnectButton } from "../ceramic-connect-button";
 import * as Ethereum from "../ethereum";
-import { useObservable } from "../use-observable";
 import { UnreachableCaseError } from "../unreachable-case-error";
 import * as System from "slate-react-system";
 import { useSubject } from "../plumbing/use-subject";
@@ -40,9 +39,9 @@ export function Header(props: React.PropsWithChildren<{}>) {
   return (
     <Element>
       <HolyGrailLayout.Main>...</HolyGrailLayout.Main>
-      {/*<Right><AuthenticationEntry /></Right>*/}
       <Right>
         <ConnectEthereumButton />
+        <CeramicConnectButton />
       </Right>
     </Element>
   );

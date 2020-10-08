@@ -1,4 +1,3 @@
-import React from "react";
 import { BehaviorSubject, Observable } from "rxjs";
 import { OneOffSubject } from "./plumbing/one-off-subject";
 
