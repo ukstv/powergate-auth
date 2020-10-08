@@ -1,15 +1,15 @@
 import { DID } from "dids";
 import { BehaviorSubject } from "rxjs";
-import * as Ethereum from "./ethereum";
+import * as Ethereum from "./ethereum-connection";
 import { EthereumAuthProvider } from "./ethereum-auth-provider";
-import { filter } from "rxjs/operators";
-import { OneOffSubject } from "./plumbing/one-off-subject";
+import { filter, map } from "rxjs/operators";
 import * as sha256 from "@stablelib/sha256";
 import IdentityWallet from "identity-wallet";
 import { IDX } from "@ceramicstudio/idx";
 import type { CeramicApi } from "@ceramicnetwork/ceramic-common";
 import CeramicClient from "@ceramicnetwork/ceramic-http-client";
 import { definitions, schemas } from "@ceramicstudio/idx-constants";
+import { InitSubject } from "./plumbing/init-subject";
 
 const CERAMIC_API = "https://ceramic.3boxlabs.com";
 
@@ -36,7 +36,7 @@ export type ConnectedState = {
 
 export type State = DisconnectedState | ProgressState | ConnectedState;
 
-export const state$ = new BehaviorSubject<State>({
+export const state$ = new InitSubject<State>({
   status: Status.DISCONNECTED,
 });
 
@@ -47,10 +47,9 @@ export async function connect(): Promise<{
 }> {
   const ethereum = await Ethereum.connect$()
     .pipe(
-      filter(
-        (s): s is Ethereum.ConnectedState =>
-          s.status === Ethereum.Status.CONNECTED
-      )
+      filter((s): s is Ethereum.ConnectedState => {
+        return s.status === Ethereum.Status.CONNECTED;
+      })
     )
     .toPromise();
   const authProvider = new EthereumAuthProvider(
@@ -88,9 +87,9 @@ export async function connect(): Promise<{
   };
 }
 
-export async function connect$() {
-  const progress = new OneOffSubject<State>({ status: Status.PROGRESS });
-  progress.subscribe(state$);
+export function connect$() {
+  const progress = new BehaviorSubject<State>({ status: Status.PROGRESS });
+  const subscription = progress.subscribe(state$);
   connect()
     .then((results) => {
       progress.next({
@@ -99,9 +98,15 @@ export async function connect$() {
         idx: results.idx,
         ceramic: results.ceramic,
       });
+      progress.complete();
     })
     .catch((error) => {
+      progress.next({
+        status: Status.DISCONNECTED,
+      });
+      subscription.unsubscribe();
       progress.error(error);
     });
+
   return progress.asObservable();
 }

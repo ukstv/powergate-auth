@@ -1,5 +1,5 @@
 import { BehaviorSubject, Observable } from "rxjs";
-import { OneOffSubject } from "./plumbing/one-off-subject";
+import { InitSubject } from "./plumbing/init-subject";
 
 export enum Status {
   DISCONNECTED,
@@ -23,7 +23,7 @@ export type ConnectedState = {
 
 export type State = DisconnectedState | ProgressState | ConnectedState;
 
-export const state$ = new BehaviorSubject<State>({
+export const state$ = new InitSubject<State>({
   status: Status.DISCONNECTED,
 });
 
@@ -47,8 +47,8 @@ async function connect(): Promise<{ provider: any; account: any }> {
 }
 
 export function connect$(): Observable<State> {
-  const progress = new OneOffSubject<State>({ status: Status.PROGRESS });
-  progress.subscribe(state$);
+  const progress = new BehaviorSubject<State>({ status: Status.PROGRESS });
+  const subscription = progress.subscribe(state$);
   connect()
     .then((connection) => {
       progress.next({
@@ -56,8 +56,13 @@ export function connect$(): Observable<State> {
         provider: connection.provider,
         account: connection.account,
       });
+      progress.complete();
     })
     .catch((error) => {
+      progress.next({
+        status: Status.DISCONNECTED,
+      });
+      subscription.unsubscribe();
       progress.error(error);
     });
 

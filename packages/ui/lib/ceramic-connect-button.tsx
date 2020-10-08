@@ -22,12 +22,26 @@ function DidIcon(props: { id: string }) {
 export function CeramicConnectButton() {
   const ceramic = useSubject(CeramicConnection.state$);
 
+  const connect = () => {
+    CeramicConnection.connect$().subscribe({
+      error: (error) => {
+        System.dispatchCustomEvent({
+          name: "create-notification",
+          detail: {
+            id: "ceramic-connect-button" + Math.random() * 10000,
+            description: error.message,
+            timeout: 3000,
+            status: "ERROR",
+          },
+        });
+      },
+    });
+  };
+
   switch (ceramic.status) {
     case CeramicConnection.Status.DISCONNECTED:
       return (
-        <System.ButtonPrimary onClick={CeramicConnection.connect$}>
-          Connect
-        </System.ButtonPrimary>
+        <System.ButtonPrimary onClick={connect}>Connect</System.ButtonPrimary>
       );
     case CeramicConnection.Status.PROGRESS:
       return <System.LoaderCircles />;
