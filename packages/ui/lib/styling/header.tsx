@@ -4,6 +4,9 @@ import { HolyGrailLayout } from "./holy-grail-layout";
 import { AuthenticationEntry } from "../authentication-entry";
 import * as Ethereum from "../ethereum";
 import { useObservable } from "../use-observable";
+import { UnreachableCaseError } from "../unreachable-case-error";
+import * as System from "slate-react-system";
+import { useSubject } from "../plumbing/use-subject";
 
 const Element = styled(HolyGrailLayout.Main)`
   padding: 1em;
@@ -14,33 +17,22 @@ const Right = styled.div`
   text-align right;
 `;
 
-export function AuthEthereum() {
-  const state = useObservable(
-    Ethereum.dispatch.state$,
-    Ethereum.dispatch.state
-  );
-  const [progress, setProgress] = useState(false);
+export function ConnectEthereumButton() {
+  const ethereum = useSubject(Ethereum.state$);
 
-  const connect = useCallback(() => {
-    setProgress(true);
-    Ethereum.dispatch
-      .connect()
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => {
-        setProgress(false);
-      });
-  }, [Ethereum.dispatch]);
-
-  if (state.status === Ethereum.Status.CONNECTED) {
-    return <p>Connected</p>;
-  } else {
-    if (progress) {
-      return <p>connecting</p>;
-    } else {
-      return <button onClick={connect}>Connect</button>;
-    }
+  switch (ethereum.status) {
+    case Ethereum.Status.CONNECTED:
+      return <p>{ethereum.account}</p>;
+    case Ethereum.Status.PROGRESS:
+      return <System.LoaderCircles />;
+    case Ethereum.Status.DISCONNECTED:
+      return (
+        <System.ButtonPrimary onClick={Ethereum.connect$}>
+          Connect
+        </System.ButtonPrimary>
+      );
+    default:
+      throw new UnreachableCaseError(ethereum);
   }
 }
 
@@ -50,7 +42,7 @@ export function Header(props: React.PropsWithChildren<{}>) {
       <HolyGrailLayout.Main>...</HolyGrailLayout.Main>
       {/*<Right><AuthenticationEntry /></Right>*/}
       <Right>
-        <AuthEthereum />
+        <ConnectEthereumButton />
       </Right>
     </Element>
   );
