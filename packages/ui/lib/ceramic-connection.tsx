@@ -2,7 +2,7 @@ import { DID } from "dids";
 import { BehaviorSubject } from "rxjs";
 import * as Ethereum from "./ethereum-connection";
 import { EthereumAuthProvider } from "./ethereum-auth-provider";
-import { filter, map } from "rxjs/operators";
+import { filter } from "rxjs/operators";
 import * as sha256 from "@stablelib/sha256";
 import IdentityWallet from "identity-wallet";
 import { IDX } from "@ceramicstudio/idx";
@@ -12,8 +12,6 @@ import { definitions, schemas } from "@ceramicstudio/idx-constants";
 import { InitSubject } from "./plumbing/init-subject";
 import React, { useContext } from "react";
 import { EthereumConnection, useEthereum } from "./ethereum-connection";
-
-const CERAMIC_API = "https://ceramic.3boxlabs.com";
 
 export enum Status {
   DISCONNECTED,
@@ -38,7 +36,7 @@ export type ConnectedState = {
 
 export type State = DisconnectedState | ProgressState | ConnectedState;
 
-class CeramicConnection extends InitSubject<State> {
+export class CeramicConnection extends InitSubject<State> {
   constructor(
     readonly endpoint: string,
     readonly ethereumConnection: EthereumConnection
