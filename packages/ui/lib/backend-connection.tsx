@@ -16,10 +16,12 @@ export enum Status {
 
 export interface DisconnectedState {
   status: Status.DISCONNECTED;
+  endpoint: string;
 }
 
 export interface ProgressState {
   status: Status.PROGRESS;
+  endpoint: string;
 }
 
 export interface ConnectedState {
@@ -28,6 +30,7 @@ export interface ConnectedState {
   did: DID;
   idx: IDX;
   ceramic: CeramicApi;
+  endpoint: string;
 }
 
 export type State = DisconnectedState | ProgressState | ConnectedState;
@@ -37,11 +40,14 @@ export class BackendConnection extends InitSubject<State> {
     private readonly endpoint: string,
     private readonly ceramicConnection: Ceramic.CeramicConnection
   ) {
-    super({ status: Status.DISCONNECTED });
+    super({ status: Status.DISCONNECTED, endpoint: endpoint });
   }
 
   connect$() {
-    const progress = new BehaviorSubject<State>({ status: Status.PROGRESS });
+    const progress = new BehaviorSubject<State>({
+      status: Status.PROGRESS,
+      endpoint: this.endpoint,
+    });
     const subscription = progress.subscribe(this);
     connect(this.endpoint, this.ceramicConnection)
       .then((result) => {
@@ -51,12 +57,14 @@ export class BackendConnection extends InitSubject<State> {
           ceramic: result.ceramic.ceramic,
           idx: result.ceramic.idx,
           did: result.ceramic.did,
+          endpoint: this.endpoint,
         });
         progress.complete();
       })
       .catch((error) => {
         progress.next({
           status: Status.DISCONNECTED,
+          endpoint: this.endpoint,
         });
         subscription.unsubscribe();
         progress.error(error);

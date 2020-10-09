@@ -1,7 +1,7 @@
 import { DID } from "dids";
 import { BehaviorSubject } from "rxjs";
 import * as Ethereum from "./ethereum-connection";
-import { EthereumAuthProvider } from "./ethereum-auth-provider";
+import { EthereumAuthProvider } from "./3id-replacement/ethereum-auth-provider";
 import { filter } from "rxjs/operators";
 import * as sha256 from "@stablelib/sha256";
 import IdentityWallet from "identity-wallet";

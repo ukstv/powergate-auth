@@ -30,6 +30,7 @@
     "@stablelib/sha256": "^1.0.0",
     "@textile/powergate-client": "^2.0.1",
     "borc": "^2.1.2",
+    "cids": "^1.0.1",
     "did-jwt": "^4.6.2",
     "did-resolver": "^2.1.1",
     "dids": "^0.6.4",

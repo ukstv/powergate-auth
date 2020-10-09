@@ -1,14 +1,12 @@
-import React, { useContext } from "react";
+import React from "react";
 import styled from "@emotion/styled";
 import { HolyGrailLayout } from "./holy-grail-layout";
-import { CeramicConnectButton } from "../ceramic-connect-button";
 import * as Ethereum from "../ethereum-connection";
-import { UnreachableCaseError } from "../unreachable-case-error";
+import { UnreachableCaseError } from "../3id-replacement/unreachable-case-error";
 import * as System from "slate-react-system";
-import { EthereumContext, useEthereum } from "../ethereum-connection";
+import { useEthereum } from "../ethereum-connection";
 import { useSubject } from "../plumbing/use-subject";
 import * as Backend from "../backend-connection";
-import { useCeramic } from "../ceramic-connection";
 import { Jazzicon } from "@ukstv/jazzicon-react";
 
 const Element = styled(HolyGrailLayout.Main)`

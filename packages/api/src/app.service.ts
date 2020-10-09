@@ -5,7 +5,7 @@ import { SymCryptService } from "./sym-crypt.service";
 import { PowergateService } from "./powergate.service";
 
 const textEncoder = new TextEncoder();
-const textDecoder = new TextDecoder()
+const textDecoder = new TextDecoder();
 
 @Injectable()
 export class AppService {
@@ -37,9 +37,21 @@ export class AppService {
   async validateBearerToken(bearerToken: string) {
     const self = await this.identityService.self();
     const decoded = didJwt.decodeJWT(bearerToken);
-    const token = decoded.payload.token
-    const powergateToken = await this.symCrypt.decryptPacked(token)
-    console.log('pow', textDecoder.decode(powergateToken))
+    const token = decoded.payload.token;
+    if (decoded.payload.expiresAt <= Math.floor(new Date().valueOf() / 1000)) {
+      throw new Error(`Expired token`);
+    }
+    const isIssuedBySelf =
+      decoded.header.kid && decoded.header.kid.startsWith(self.id);
+    if (!isIssuedBySelf) {
+      throw new Error("Not issued by me");
+    }
+    const isSignedBySelf = await this.validateSignature(bearerToken, self.id);
+    if (!isSignedBySelf) {
+      throw new Error(`Not signed by me`);
+    }
+    const powergateToken = await this.symCrypt.decryptPacked(token);
+    return textDecoder.decode(powergateToken);
   }
 
   async validateAuthRequest(tokenRequest: string): Promise<string> {

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { AppController } from "./app.controller";
+import { AuthController } from "./auth.controller";
 import { AppService } from "./app.service";
 import { IdentityService } from "./identity.service";
 import * as didJWT from "did-jwt";
@@ -21,11 +21,11 @@ afterAll(async () => {
 });
 
 describe("AppController", () => {
-  let appController: AppController;
+  let appController: AuthController;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      controllers: [AppController],
+      controllers: [AuthController],
       providers: [
         AppService,
         IdentityService,
@@ -34,7 +34,7 @@ describe("AppController", () => {
       ],
     }).compile();
 
-    appController = app.get<AppController>(AppController);
+    appController = app.get<AuthController>(AuthController);
   });
 
   describe("GET auth", () => {

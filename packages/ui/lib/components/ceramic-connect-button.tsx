@@ -2,23 +2,10 @@ import React from "react";
 import { Jazzicon } from "@ukstv/jazzicon-react";
 import styled from "@emotion/styled";
 import * as System from "slate-react-system";
-import * as CeramicConnection from "./ceramic-connection";
-import { UnreachableCaseError } from "./unreachable-case-error";
-import { useCeramic } from "./ceramic-connection";
-import { useSubject } from "./plumbing/use-subject";
-
-const LocalJazz = styled(Jazzicon)`
-  width: 2.5rem;
-  height: 2.5rem;
-`;
-
-function DidIcon(props: { id: string }) {
-  return (
-    <div title={props.id}>
-      <LocalJazz address={props.id} />
-    </div>
-  );
-}
+import * as CeramicConnection from "../ceramic-connection";
+import { UnreachableCaseError } from "../3id-replacement/unreachable-case-error";
+import { useCeramic } from "../ceramic-connection";
+import { useSubject } from "../plumbing/use-subject";
 
 export function CeramicConnectButton() {
   const ceramic = useCeramic();
