@@ -9,9 +9,9 @@ import {
   UploadedFile,
   Param,
 } from "@nestjs/common";
-import { AppService } from "./app.service";
+import { AppService } from "../ancillary/app.service";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { PowergateService } from "./powergate.service";
+import { PowergateService } from "../ancillary/powergate.service";
 
 @Controller("/files")
 export class FilesController {

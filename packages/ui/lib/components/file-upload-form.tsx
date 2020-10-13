@@ -22,9 +22,12 @@ export function FileUploadForm() {
   const backend = Backend.useBackend();
   const backendState = useSubject(backend);
   const [file, setFile] = useState(null);
+  const [progress, setProgress] = useState(false);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    setProgress(true);
     event.preventDefault();
+    const form = event.currentTarget;
     if (backendState.status === Backend.Status.CONNECTED && file) {
       const formData = new FormData();
       formData.append("file", file, file.name);
@@ -37,15 +40,35 @@ export function FileUploadForm() {
       })
         .then(() => {
           console.log("done uploading");
+          setProgress(false);
+          form.reset();
         })
         .catch((err) => {
           console.log("error uploading", err);
+          setProgress(false);
+          form.reset();
         });
     }
   };
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     setFile(event.target.files[0]);
+  };
+
+  const renderButton = () => {
+    if (progress) {
+      return <System.ButtonDisabled>Uploading...</System.ButtonDisabled>;
+    } else {
+      const isDisabled = !file;
+      const Button = isDisabled
+        ? System.ButtonDisabled
+        : System.ButtonSecondary;
+      return (
+        <Button type={"submit"} disabled={!file}>
+          Upload
+        </Button>
+      );
+    }
   };
 
   if (backendState.status === Backend.Status.CONNECTED) {
@@ -56,9 +79,7 @@ export function FileUploadForm() {
         <System.H1>Upload file</System.H1>
         <FormContainer onSubmit={handleSubmit}>
           <input type="file" onChange={handleFileChange} />
-          <Button type={"submit"} disabled={!file}>
-            Upload
-          </Button>
+          {renderButton()}
         </FormContainer>
       </div>
     );

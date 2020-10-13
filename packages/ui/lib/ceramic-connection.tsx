@@ -90,6 +90,8 @@ export async function connect(
     ethereum.provider,
     ethereum.account
   );
+
+  // get ethereum provider
   // await threeIdConnect.connect(authProvider);
   // const didProvider = await threeIdConnect.getDidProvider();
   //

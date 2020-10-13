@@ -1,13 +1,13 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { AuthController } from "./auth.controller";
-import { AppService } from "./app.service";
-import { IdentityService } from "./identity.service";
+import { AppService } from "../ancillary/app.service";
+import { IdentityService } from "../ancillary/identity.service";
 import * as didJWT from "did-jwt";
 import CeramicClient from "@ceramicnetwork/ceramic-http-client";
 import IdentityWallet from "identity-wallet";
 import { DID } from "dids";
-import { SymCryptService } from "./sym-crypt.service";
-import { PowergateService } from "./powergate.service";
+import { SymCryptService } from "../ancillary/sym-crypt.service";
+import { PowergateService } from "../ancillary/powergate.service";
 
 const CERAMIC_API = "https://ceramic.3boxlabs.com";
 const ceramic = new CeramicClient(CERAMIC_API);

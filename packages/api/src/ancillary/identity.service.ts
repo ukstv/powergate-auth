@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  OnModuleDestroy,
-} from "@nestjs/common";
+import { Injectable, OnModuleDestroy } from "@nestjs/common";
 import IdentityWallet from "identity-wallet";
 import CeramicClient from "@ceramicnetwork/ceramic-http-client";
 import { DID } from "dids";
