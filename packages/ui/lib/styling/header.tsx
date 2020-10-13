@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import { HolyGrailLayout } from "./holy-grail-layout";
 import * as Ethereum from "../ethereum-connection";
@@ -8,6 +8,7 @@ import { useEthereum } from "../ethereum-connection";
 import { useSubject } from "../plumbing/use-subject";
 import * as Backend from "../backend-connection";
 import { Jazzicon } from "@ukstv/jazzicon-react";
+import {FilecoinAddress} from "./filecoin-address";
 
 const Element = styled(HolyGrailLayout.Main)`
   padding: 1em;
@@ -16,6 +17,8 @@ const Element = styled(HolyGrailLayout.Main)`
 
 const Right = styled.div`
   text-align right;
+  display: flex;
+  flex-direction: row;
 `;
 
 export function ConnectEthereumButton() {
@@ -106,6 +109,7 @@ export function Header(props: React.PropsWithChildren<{}>) {
       <Right>
         {/*<ConnectEthereumButton />*/}
         {/*<CeramicConnectButton />*/}
+        <FilecoinAddress />
         <ConnectBackendButton />
       </Right>
     </Element>

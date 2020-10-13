@@ -17,7 +17,7 @@ export class AuthController {
     return token
   }
 
-  @Get("/ls")
+  @Get("/address")
   async getLs(@Headers("Authorization") authorization: string) {
     const token = authorization.split(' ')[1]
     await this.appService.validateBearerToken(token)

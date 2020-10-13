@@ -1,0 +1,20 @@
+import { Controller, Get, Headers } from "@nestjs/common";
+import { AppService } from "../ancillary/app.service";
+import { PowergateService } from "../ancillary/powergate.service";
+
+@Controller("/filecoin")
+export class FilecoinController {
+  constructor(
+    private readonly appService: AppService,
+    private readonly powergate: PowergateService
+  ) {}
+
+  @Get("/address")
+  async address(@Headers("Authorization") authorization: string) {
+    const token = authorization.split(" ")[1];
+    const powergateToken = await this.appService.validateBearerToken(token);
+    const pow = await this.powergate.pow(powergateToken);
+    const address = await this.powergate.address(pow);
+    return address;
+  }
+}

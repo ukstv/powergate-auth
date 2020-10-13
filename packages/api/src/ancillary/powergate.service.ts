@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { createPow, Pow } from "@textile/powergate-client";
 import CID from "cids";
 import { DatabaseService } from "./database.service";
+import * as _ from "lodash";
 
 const TODO_POW_HOST = "http://localhost:6002";
 
@@ -30,9 +31,14 @@ export class PowergateService {
 
   async pow(token: string): Promise<Pow> {
     const pow = createPow({ host: TODO_POW_HOST });
-    console.log("powtoken", token);
     await pow.setToken(token);
     return pow;
+  }
+
+  async address(pow: Pow): Promise<{ addr: string; type: string }> {
+    const { addrsList } = await pow.ffs.addrs();
+    const addresses = addrsList.map((addrEntry) => _.omit(addrEntry, "name"));
+    return addresses[0];
   }
 
   async upload(pow: Pow, buffer: Buffer): Promise<CID> {

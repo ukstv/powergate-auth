@@ -25,6 +25,7 @@ importers:
       helmet: 4.1.1
       identity-wallet: 2.0.0-alpha.11
       level-ts: 2.0.5
+      lodash: 4.17.20
       reflect-metadata: 0.1.13
       rimraf: 3.0.2
       rxjs: 6.6.3
@@ -35,6 +36,7 @@ importers:
       '@nestjs/testing': 7.4.4_a073563eda6e2cb33ae79215800d4b16
       '@types/express': 4.17.8
       '@types/jest': 26.0.10
+      '@types/lodash': 4.14.162
       '@types/node': 13.13.21
       '@types/supertest': 2.0.10
       '@typescript-eslint/eslint-plugin': 3.9.1_a0db6c89db8b59fdf2bdef1d2ddbcbc4
@@ -65,6 +67,7 @@ importers:
       '@textile/powergate-client': ^2.0.1
       '@types/express': ^4.17.3
       '@types/jest': 26.0.10
+      '@types/lodash': ^4.14.162
       '@types/node': ^13.9.1
       '@types/supertest': ^2.0.8
       '@typescript-eslint/eslint-plugin': 3.9.1
@@ -81,6 +84,7 @@ importers:
       identity-wallet: 2.0.0-alpha.11
       jest: 26.4.2
       level-ts: ^2.0.5
+      lodash: ^4.17.20
       prettier: ^1.19.1
       reflect-metadata: ^0.1.13
       rimraf: ^3.0.2
@@ -3731,6 +3735,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-EP6O3Jkr7bXvZZSZYlsgt5DIjiGr0dXP1/jVEwVLTFgg0d+3lWVQkRavYVQszV7dYUwvg0B8R0MBDpcmXg7XIA==
+  /@types/lodash/4.14.162:
+    dev: true
+    resolution:
+      integrity: sha512-alvcho1kRUnnD1Gcl4J+hK0eencvzq9rmzvFPRmP5rPHx9VVsJj6bKLTATPVf9ktgv4ujzh7T+XWKp+jhuODig==
   /@types/long/4.0.1:
     dev: false
     resolution:
