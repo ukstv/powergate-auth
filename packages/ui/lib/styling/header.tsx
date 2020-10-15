@@ -75,6 +75,7 @@ export function ConnectBackendButton() {
   const connect = () => {
     backend.connect$().subscribe({
       error: (error) => {
+        console.error(error)
         System.dispatchCustomEvent({
           name: "create-notification",
           detail: {

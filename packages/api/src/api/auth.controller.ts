@@ -16,12 +16,4 @@ export class AuthController {
     console.log("token", token);
     return token
   }
-
-  @Get("/address")
-  async getLs(@Headers("Authorization") authorization: string) {
-    const token = authorization.split(' ')[1]
-    await this.appService.validateBearerToken(token)
-    console.log('ls token', token)
-    return 'ss'
-  }
 }

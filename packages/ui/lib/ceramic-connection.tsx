@@ -49,7 +49,6 @@ export class CeramicConnection extends InitSubject<State> {
     const subscription = progress.subscribe(this);
     connect(this.ethereumConnection, new CeramicClient(this.endpoint))
       .then((results) => {
-        console.log("done connecting");
         progress.next({
           status: Status.CONNECTED,
           did: results.did,

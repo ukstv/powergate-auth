@@ -17,7 +17,7 @@ function MyApp({ Component, pageProps }) {
       />
       <GlobalTooltip />
       <GlobalNotification style={{ bottom: 0, right: 0 }} />
-      <CeramicProvider endpoint={"https://ceramic.3boxlabs.com"}>
+      <CeramicProvider endpoint={"http://localhost:7007"}>
         <BackendProvider endpoint={"http://localhost:3000"}>
           <Component {...pageProps} />
         </BackendProvider>

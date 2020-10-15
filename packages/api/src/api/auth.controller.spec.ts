@@ -9,7 +9,7 @@ import { DID } from "dids";
 import { SymCryptService } from "../ancillary/sym-crypt.service";
 import { PowergateService } from "../ancillary/powergate.service";
 
-const CERAMIC_API = "https://ceramic.3boxlabs.com";
+const CERAMIC_API = "http://localhost:7007";
 const ceramic = new CeramicClient(CERAMIC_API);
 
 const getPermission = async () => [];

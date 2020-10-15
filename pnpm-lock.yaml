@@ -2,14 +2,19 @@ importers:
   .:
     devDependencies:
       prettier: 2.1.2
+      ts-node: 9.0.0_typescript@4.0.3
       typescript: 4.0.3
     specifiers:
       prettier: ^2.1.2
+      ts-node: ^9.0.0
       typescript: ^4.0.3
   packages/api:
     dependencies:
       '@ceramicnetwork/3id-did-resolver': 0.4.3
       '@ceramicnetwork/ceramic-http-client': 0.6.3
+      '@filecoin-shipyard/lotus-client-provider-nodejs': 0.0.5
+      '@filecoin-shipyard/lotus-client-rpc': 0.0.11
+      '@filecoin-shipyard/lotus-client-schema': 0.0.14
       '@nestjs/common': 7.4.4_0c773f197e7bb0df0bedc332ad8bc35d
       '@nestjs/core': 7.4.4_efc34def801f29a4094d370628537f54
       '@nestjs/platform-express': 7.4.4_a073563eda6e2cb33ae79215800d4b16
@@ -17,7 +22,9 @@ importers:
       '@stablelib/bytes': 1.0.0
       '@stablelib/sha256': 1.0.0
       '@textile/powergate-client': 2.0.1
+      '@ukstv/3id-blockchain-utils': 1.2.1
       borc: 2.1.2
+      caip: 0.9.2
       cids: 1.0.1
       did-jwt: 4.6.2
       did-resolver: 2.1.1
@@ -55,6 +62,9 @@ importers:
     specifiers:
       '@ceramicnetwork/3id-did-resolver': ^0.4.3
       '@ceramicnetwork/ceramic-http-client': ^0.6.3
+      '@filecoin-shipyard/lotus-client-provider-nodejs': ^0.0.5
+      '@filecoin-shipyard/lotus-client-rpc': ^0.0.11
+      '@filecoin-shipyard/lotus-client-schema': ^0.0.14
       '@nestjs/cli': ^7.0.0
       '@nestjs/common': ^7.0.0
       '@nestjs/core': ^7.0.0
@@ -72,7 +82,9 @@ importers:
       '@types/supertest': ^2.0.8
       '@typescript-eslint/eslint-plugin': 3.9.1
       '@typescript-eslint/parser': 3.9.1
+      '@ukstv/3id-blockchain-utils': ^1.2.1
       borc: ^2.1.2
+      caip: ^0.9.2
       cids: ^1.0.1
       did-jwt: ^4.6.2
       did-resolver: ^2.1.1
@@ -130,7 +142,7 @@ importers:
       styled-components: 5.2.0_975908421a0f349b287d23c767f90c42
       use-wallet: 0.8.0_react@16.13.1
       web3: 1.3.0
-      web3modal: 'link:../../../../../../../../usr/local/pnpm-global/node_modules/web3modal'
+      web3modal: 1.9.1
     devDependencies:
       '@types/react': 16.9.50
     specifiers:
@@ -2072,7 +2084,7 @@ packages:
     dev: false
     resolution:
       integrity: sha512-aXweZ1Z7vMNzJdLpR1CZUAIgnwjrZeUSvN9syCwlBaEBUFJmFY+HHnfuTI5vIhVs/mRkfJVrbEyl51JZQqyjAg==
-  /@ethersproject/abi/5.0.6:
+  /@ethersproject/abi/5.0.7:
     dependencies:
       '@ethersproject/address': 5.0.5
       '@ethersproject/bignumber': 5.0.8
@@ -2085,7 +2097,7 @@ packages:
       '@ethersproject/strings': 5.0.5
     dev: false
     resolution:
-      integrity: sha512-ldhyQANDeVH0tMJM4SeySx9HTuKdev15/CUTSJMyvjgfLrWApE4Fmz8FRz9/giN1Nw8gRCWlPOfKkfmuypA7pg==
+      integrity: sha512-Cqktk+hSIckwP/W8O47Eef60VwmoSC/L3lY0+dIBhQPCNn9E4V7rwmm2aFrNRRDJfFlGuZ1khkQUOc3oBX+niw==
   /@ethersproject/abstract-provider/5.0.5:
     dependencies:
       '@ethersproject/bignumber': 5.0.8
@@ -2094,7 +2106,7 @@ packages:
       '@ethersproject/networks': 5.0.4
       '@ethersproject/properties': 5.0.4
       '@ethersproject/transactions': 5.0.6
-      '@ethersproject/web': 5.0.8
+      '@ethersproject/web': 5.0.9
     dev: false
     resolution:
       integrity: sha512-i/CjElAkzV7vQBAeoz+IpjGfcFYEP9eD7j3fzZ0fzTq03DO7PPnR+xkEZ1IoDXGwDS+55aLM1xvLDwB/Lx6IOQ==
@@ -2154,7 +2166,7 @@ packages:
       integrity: sha512-foaQVmxp2+ik9FrLUCtVrLZCj4M3Ibgkqvh+Xw/vFRSerkjVSYePApaVE5essxhoSlF1U9oXfWY09QI2AXtgKA==
   /@ethersproject/contracts/5.0.5:
     dependencies:
-      '@ethersproject/abi': 5.0.6
+      '@ethersproject/abi': 5.0.7
       '@ethersproject/abstract-provider': 5.0.5
       '@ethersproject/abstract-signer': 5.0.6
       '@ethersproject/address': 5.0.5
@@ -2288,6 +2300,30 @@ packages:
     dev: false
     resolution:
       integrity: sha512-SD82AMgUpDgqvSPJxjVgSqMBde9LsIAfroS3YcK2dE/VUuVeJQFWtjFbkFRF4pjTd2u+qYXh0eo1gq7LU7B1YQ==
+  /@ethersproject/providers/5.0.12:
+    dependencies:
+      '@ethersproject/abstract-provider': 5.0.5
+      '@ethersproject/abstract-signer': 5.0.6
+      '@ethersproject/address': 5.0.5
+      '@ethersproject/basex': 5.0.4
+      '@ethersproject/bignumber': 5.0.8
+      '@ethersproject/bytes': 5.0.5
+      '@ethersproject/constants': 5.0.5
+      '@ethersproject/hash': 5.0.5
+      '@ethersproject/logger': 5.0.6
+      '@ethersproject/networks': 5.0.4
+      '@ethersproject/properties': 5.0.4
+      '@ethersproject/random': 5.0.4
+      '@ethersproject/rlp': 5.0.4
+      '@ethersproject/sha2': 5.0.4
+      '@ethersproject/strings': 5.0.5
+      '@ethersproject/transactions': 5.0.6
+      '@ethersproject/web': 5.0.9
+      bech32: 1.1.4
+      ws: 7.2.3
+    dev: false
+    resolution:
+      integrity: sha512-bRUEVNth+wGlm2Q0cQprVlixBWumfP9anrgAc3V2CbIh+GKvCwisVO8uRLrZOfOvTNSy6PUJi/Z4D5L+k3NAog==
   /@ethersproject/random/5.0.4:
     dependencies:
       '@ethersproject/bytes': 5.0.5
@@ -2371,6 +2407,16 @@ packages:
     dev: false
     resolution:
       integrity: sha512-5An1sar40zXUYmBLH+P1m0F3mTi8lNBV/usLKP3AYBdSxPQyQWymLAEPyX7x5/eBpQAwCInLtF7LPMm9HPI28g==
+  /@ethersproject/web/5.0.9:
+    dependencies:
+      '@ethersproject/base64': 5.0.4
+      '@ethersproject/bytes': 5.0.5
+      '@ethersproject/logger': 5.0.6
+      '@ethersproject/properties': 5.0.4
+      '@ethersproject/strings': 5.0.5
+    dev: false
+    resolution:
+      integrity: sha512-//QNlv1MSkOII1hv3+HQwWoiVFS+BMVGI0KYeUww4cyrEktnx1QIez5bTSab9s9fWTFaWKNmQNBwMbxAqPuYDw==
   /@ethersproject/wordlists/5.0.5:
     dependencies:
       '@ethersproject/bytes': 5.0.5
@@ -2381,6 +2427,26 @@ packages:
     dev: false
     resolution:
       integrity: sha512-XA3ycFltVrCTQt04w5nHu3Xq5Z6HjqWsXaAYQHFdqtugyUsIumaO9S5MOwFFuUYTNkZUoT3jCRa/OBS+K4tLfA==
+  /@filecoin-shipyard/lotus-client-provider-browser/0.0.14:
+    dev: false
+    resolution:
+      integrity: sha512-rFH2aUA65fa9C+3d8JoKxL/UGYPbEqIjhJ9ZMJS50aKFELMA1FJ/l10Tpgkx0p6KrdygfIytHneITvpgcumR4g==
+  /@filecoin-shipyard/lotus-client-provider-nodejs/0.0.5:
+    dependencies:
+      '@filecoin-shipyard/lotus-client-provider-browser': 0.0.14
+      node-fetch: 2.6.1
+      ws: 7.3.1
+    dev: false
+    resolution:
+      integrity: sha512-alYbMEYr5M/U/n97eWSWvIi79pZBFhUdS+NEJSpVUhZBzR1iIKKSr0MxL0zXdMTFV5C/UbVKNJy72JaSAvS9oA==
+  /@filecoin-shipyard/lotus-client-rpc/0.0.11:
+    dev: false
+    resolution:
+      integrity: sha512-7ZgT7tyB+5fp5mC9yC4Da9vj3M8PiVPNuxFkFAaDRu8blDuKg/tNh4OMZr5pqs/uuwjRZuXslGl8dOb2Iz+rZg==
+  /@filecoin-shipyard/lotus-client-schema/0.0.14:
+    dev: false
+    resolution:
+      integrity: sha512-qBWjM58nvnIh9YpiY1XZbmDH1J3h8lrVUCA9co4tr2LCRypGOZe7n+1GKMJAN0CnTQSnQRT6RW8uJdqBymY5qg==
   /@hapi/accept/5.0.1:
     dependencies:
       '@hapi/boom': 9.1.0
@@ -3751,6 +3817,11 @@ packages:
     dev: false
     resolution:
       integrity: sha512-fh+pAqt4xRzPfqA6eh3Z2y6fyZavRIumvjhaCL753+TVkGKGhpPeyrJG2JftD0T9q4GF00KjefsQ+PQNDdWQaQ==
+  /@types/node/11.11.6:
+    dev: false
+    optional: true
+    resolution:
+      integrity: sha512-Exw4yUWMBXM3X+8oqzJNRqZSwUAaS4+7NdvHqQuFi/d+synz++xmX3QIf+BFqneW8N31R8Ky+sikfZUXq07ggQ==
   /@types/node/12.12.62:
     dev: false
     resolution:
@@ -3993,7 +4064,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.11.2
       '@ethersproject/contracts': 5.0.5
-      '@ethersproject/providers': 5.0.10
+      '@ethersproject/providers': 5.0.12
       '@ethersproject/wallet': 5.0.5
       caip: 0.9.2
       js-sha256: 0.9.0
@@ -4002,6 +4073,20 @@ packages:
       '@zondax/filecoin-signing-tools': ^0.6.3
     resolution:
       integrity: sha512-O+SCg1Rnfqy5iBdi+jarYmTOynCFxNPRVMpr2VAMrlUSqiwsdamVQuni0fxaONozZFFBPfyZQcSQXS70gJXVVA==
+  /@ukstv/3id-blockchain-utils/1.2.1:
+    dependencies:
+      '@babel/runtime': 7.11.2
+      '@ethersproject/contracts': 5.0.5
+      '@ethersproject/providers': 5.0.12
+      '@ethersproject/wallet': 5.0.5
+      caip: 0.9.2
+      js-sha256: 0.9.0
+      uint8arrays: 1.1.0
+    dev: false
+    optionalDependencies:
+      '@zondax/filecoin-signing-tools': 0.11.0
+    resolution:
+      integrity: sha512-mBdHK50CB69MnDT//M/epBphuve8I98ia+l4J4Rm5ZWc0qQ9ezo4mFf4SlqgIIBD3EGhQkMJqpi6eBse+1fAuw==
   /@ukstv/jazzicon-react/1.0.0_react@16.13.1:
     dependencies:
       color: 3.1.2
@@ -4307,6 +4392,20 @@ packages:
   /@xtuc/long/4.2.2:
     resolution:
       integrity: sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
+  /@zondax/filecoin-signing-tools/0.11.0:
+    dependencies:
+      base32-decode: 1.0.0
+      base32-encode: 1.1.1
+      bip32: 2.0.6
+      bip39: 3.0.2
+      blakejs: 1.1.0
+      ipld-dag-cbor: 0.15.3
+      leb128: 0.0.5
+      secp256k1: 4.0.2
+    dev: false
+    optional: true
+    resolution:
+      integrity: sha512-ORs17gXO2YF12ZYQrnPWYF/cnoXaA9BHussSqJ3J/xaULsO6Lc7cYlqe/5f52wYlXB+s1IbWjfjsRtivS+rYkQ==
   /abab/2.0.5:
     resolution:
       integrity: sha512-9IK9EadsbHo6jLWIpxpR6pL0sazTXV6+SQv25ZB+F7Bj9mJNaOc4nCRabwd5M/JwmUa8idz6Eci6eKfJryPs6Q==
@@ -5538,6 +5637,16 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-5T6P4xPgpp0YDFvSWwEZ4NoE3aM4QBQXDzmVbraCkFj8zHM+mba8SyqB5DbZWyR7mYHo6Y7BdQo3MoA4m0TeQg==
+  /base32-decode/1.0.0:
+    dev: false
+    optional: true
+    resolution:
+      integrity: sha512-KNWUX/R7wKenwE/G/qFMzGScOgVntOmbE27vvc6GrniDGYb6a5+qWcuoXl8WIOQL7q0TpK7nZDm1Y04Yi3Yn5g==
+  /base32-encode/1.1.1:
+    dev: false
+    optional: true
+    resolution:
+      integrity: sha512-eqa0BeGghj3guezlasdHJhr3+J5ZbbQvxeprkcDMbRQrjlqOT832IUDT4Al4ofAwekFYMqkkM9KMUHs9Cu0HKA==
   /base32.js/0.1.0:
     dev: false
     engines:
@@ -5646,6 +5755,16 @@ packages:
       node: '>=6.0.0'
     resolution:
       integrity: sha512-HpV5OMLLGTjSVblmrtYRfFFKuQB+GArM0+XP8HGWfJ5vxYBqo+DesvJwOdC2WJ3bCkZShGf0QIfoIpeomVzVdA==
+  /bip39/3.0.2:
+    dependencies:
+      '@types/node': 11.11.6
+      create-hash: 1.2.0
+      pbkdf2: 3.1.1
+      randombytes: 2.1.0
+    dev: false
+    optional: true
+    resolution:
+      integrity: sha512-J4E1r2N0tUylTKt07ibXvhpT2c5pyAFgvuA5q1H9uDy6dEGpjV8jmymh3MTYJDLCNbIVClSB9FbND49I6N24MQ==
   /bip66/1.1.5:
     dependencies:
       safe-buffer: 5.2.1
@@ -5968,6 +6087,13 @@ packages:
     dev: false
     resolution:
       integrity: sha512-4/rOEg86jivtPTeOUUT61jJO1Ya1TrR/OkqCSZDyq84WJh3LuuiphBYJN+fm5xufIk4XAFcEwte/8WzC8If/1g==
+  /buffer-pipe/0.0.3:
+    dependencies:
+      safe-buffer: 5.2.1
+    dev: false
+    optional: true
+    resolution:
+      integrity: sha512-GlxfuD/NrKvCNs0Ut+7b1IHjylfdegMBxQIlZHj7bObKVQBxB5S84gtm2yu1mQ8/sSggceWBDPY0cPXgvX2MuA==
   /buffer-to-arraybuffer/0.0.5:
     dev: false
     resolution:
@@ -10511,6 +10637,21 @@ packages:
       npm: '>=3.0.0'
     resolution:
       integrity: sha512-/i99foB+QI8WhyZWu6ZVPFw2sP6kzZSnnjPNlxxrgaJeFX22w2z00nYWafY2YYYP4mZ9xkLZDSS/msli7XXyvw==
+  /ipld-dag-cbor/0.15.3:
+    dependencies:
+      borc: 2.1.2
+      buffer: 5.6.0
+      cids: 0.8.3
+      is-circular: 1.0.2
+      multicodec: 1.0.4
+      multihashing-async: 0.8.2
+    dev: false
+    engines:
+      node: '>=6.0.0'
+      npm: '>=3.0.0'
+    optional: true
+    resolution:
+      integrity: sha512-m23nG7ZyoVFnkK55/bLAErc7EfiMgaEQlqHWDTGzPI+O5r6bPfp+qbL5zTVSIT8tpbHmu174dwerVtLoVgeVyA==
   /ipld-dag-cbor/0.16.0:
     dependencies:
       borc: 2.1.2
@@ -12592,6 +12733,14 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-weT+r0kTkRQdCdYCNtkMwWXQTMEswKrFBkm4ckQOMVhhqhIMI1UT2hMj+1iigIhgSZm5gTmrRXBNoGUgaTY1xA==
+  /leb128/0.0.5:
+    dependencies:
+      bn.js: 5.1.3
+      buffer-pipe: 0.0.3
+    dev: false
+    optional: true
+    resolution:
+      integrity: sha512-elbNtfmu3GndZbesVF6+iQAfVjOXW9bM/aax9WwMlABZW+oK9sbAZEXoewaPHmL34sxa8kVwWsru8cNE/yn2gg==
   /left-pad/1.3.0:
     deprecated: use String.prototype.padStart()
     dev: false
@@ -18613,6 +18762,22 @@ packages:
       make-error: 1.3.6
       source-map-support: 0.5.19
       typescript: 3.9.7
+      yn: 3.1.1
+    dev: true
+    engines:
+      node: '>=10.0.0'
+    hasBin: true
+    peerDependencies:
+      typescript: '>=2.7'
+    resolution:
+      integrity: sha512-/TqB4SnererCDR/vb4S/QvSZvzQMJN8daAslg7MeaiHvD8rDZsSfXmNeNumyZZzMned72Xoq/isQljYSt8Ynfg==
+  /ts-node/9.0.0_typescript@4.0.3:
+    dependencies:
+      arg: 4.1.3
+      diff: 4.0.2
+      make-error: 1.3.6
+      source-map-support: 0.5.19
+      typescript: 4.0.3
       yn: 3.1.1
     dev: true
     engines:

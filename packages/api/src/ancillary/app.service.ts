@@ -31,10 +31,10 @@ export class AppService {
     );
     const now = Math.floor(new Date().valueOf() / 1000);
     const expiresAt = now + 3 * 60 * 60; // + 3 hours
-    return self.createJWS({ token: s, expiresAt: expiresAt });
+    return self.createJWS({ token: s, expiresAt: expiresAt, id: id });
   }
 
-  async validateBearerToken(bearerToken: string) {
+  async validateBearerToken(bearerToken: string): Promise<[string, string]> {
     const self = await this.identityService.self();
     const decoded = didJwt.decodeJWT(bearerToken);
     const token = decoded.payload.token;
@@ -50,8 +50,9 @@ export class AppService {
     if (!isSignedBySelf) {
       throw new Error(`Not signed by me`);
     }
-    const powergateToken = await this.symCrypt.decryptPacked(token);
-    return textDecoder.decode(powergateToken);
+    const powergateTokenBytes = await this.symCrypt.decryptPacked(token);
+    const powergateToken = textDecoder.decode(powergateTokenBytes);
+    return [powergateToken, decoded.payload.id];
   }
 
   async validateAuthRequest(tokenRequest: string): Promise<string> {

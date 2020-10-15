@@ -39,12 +39,11 @@ export function FileUploadForm() {
         body: formData,
       })
         .then(() => {
-          console.log("done uploading");
           setProgress(false);
           form.reset();
         })
         .catch((err) => {
-          console.log("error uploading", err);
+          console.error(err)
           setProgress(false);
           form.reset();
         });

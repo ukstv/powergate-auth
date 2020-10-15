@@ -27,16 +27,15 @@ export class FilesController {
     @Headers("Authorization") authorization: string
   ) {
     const token = authorization.split(" ")[1];
-    const powergateToken = await this.appService.validateBearerToken(token);
+    const [powergateToken] = await this.appService.validateBearerToken(token);
     const pow = await this.powergate.pow(powergateToken);
-    const cid = await this.powergate.upload(pow, file.buffer);
-    console.log("file", file, cid);
+    await this.powergate.upload(pow, file.buffer);
   }
 
   @Get("/")
   async list(@Headers("Authorization") authorization: string) {
     const token = authorization.split(" ")[1];
-    const powergateToken = await this.appService.validateBearerToken(token);
+    const [powergateToken] = await this.appService.validateBearerToken(token);
     const pow = await this.powergate.pow(powergateToken);
     const list = await this.powergate.list(pow);
     return {
@@ -50,7 +49,7 @@ export class FilesController {
     @Headers("Authorization") authorization: string
   ) {
     const token = authorization.split(" ")[1];
-    const powergateToken = await this.appService.validateBearerToken(token);
+    const [powergateToken] = await this.appService.validateBearerToken(token);
     const pow = await this.powergate.pow(powergateToken);
     const status = await this.powergate.status(pow, cid);
     return {

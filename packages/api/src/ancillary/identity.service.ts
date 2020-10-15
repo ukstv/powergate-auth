@@ -5,7 +5,7 @@ import { DID } from "dids";
 import ThreeIdResolver from "@ceramicnetwork/3id-did-resolver";
 import { Resolver } from "did-resolver";
 
-const CERAMIC_API = "https://ceramic.3boxlabs.com";
+const CERAMIC_API = "http://localhost:7007";
 const ceramic = new CeramicClient(CERAMIC_API);
 
 const getPermission = async () => [];
