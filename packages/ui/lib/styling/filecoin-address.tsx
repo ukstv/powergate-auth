@@ -50,7 +50,7 @@ export function FilecoinAddress() {
   if (state.address && backendState.status == Backend.Status.CONNECTED) {
     return (
       <Element>
-        {state.address.type}:{state.address.addr}
+        {state.address.addr}
         <FilecoinLinkButton
           endpoint={backendState.endpoint}
           authToken={state.authToken}
