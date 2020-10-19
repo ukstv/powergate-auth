@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { CeramicApi } from "@ceramicnetwork/ceramic-common";
 import { IDX } from "@ceramicstudio/idx";
+import * as idxTools from "@ceramicstudio/idx-tools";
 import { BiBadge, BiAngry, BiBadgeCheck } from "react-icons/bi";
 import styled from "@emotion/styled";
 
@@ -37,7 +38,7 @@ export function FilecoinLinkButton(props: Props) {
         setState({ loading: false, error: null, done: true });
       })
       .catch((error) => {
-        console.error(error)
+        console.error(error);
         setState({ loading: false, error: String(error), done: false });
       });
   }, [props]);
@@ -49,6 +50,7 @@ export function FilecoinLinkButton(props: Props) {
     }).then((r) => r.json());
     const ceramic = props.ceramic;
     const idx = props.idx;
+    const { definitions } = await idxTools.publishIDXConfig(ceramic);
     const existingLinks = await idx.get("cryptoAccountLinks");
     if (existingLinks && existingLinks[linkProof.account]) {
       return;
@@ -60,7 +62,7 @@ export function FilecoinLinkButton(props: Props) {
       );
       await accountLinkDocument.change({ content: linkProof });
 
-      await idx.set(`cryptoAccountLinks`, {
+      await idx.set(definitions.cryptoAccountLinks, {
         [linkProof.account]: accountLinkDocument.id,
       });
     }
