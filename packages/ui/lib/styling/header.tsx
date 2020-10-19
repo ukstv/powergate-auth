@@ -91,6 +91,7 @@ export function ConnectBackendButton() {
 
   switch (state.status) {
     case Backend.Status.CONNECTED:
+      console.log(`connected as ${state.did.id}`)
       return <DidIcon id={state.did.id} />;
     case Backend.Status.PROGRESS:
       return <System.LoaderCircles />;

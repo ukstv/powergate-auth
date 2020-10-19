@@ -37,6 +37,7 @@ export function FilecoinLinkButton(props: Props) {
         setState({ loading: false, error: null, done: true });
       })
       .catch((error) => {
+        console.error(error)
         setState({ loading: false, error: String(error), done: false });
       });
   }, [props]);
@@ -49,7 +50,7 @@ export function FilecoinLinkButton(props: Props) {
     const ceramic = props.ceramic;
     const idx = props.idx;
     const existingLinks = await idx.get("cryptoAccountLinks");
-    if (existingLinks[linkProof.account]) {
+    if (existingLinks && existingLinks[linkProof.account]) {
       return;
     } else {
       const accountLinkDocument = await ceramic.createDocument(

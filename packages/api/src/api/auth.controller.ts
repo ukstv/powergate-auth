@@ -12,8 +12,6 @@ export class AuthController {
 
   @Post("/")
   async postAuthRequest(@Body("tokenRequest") tokenRequest: string) {
-    const token = await this.appService.postAuth(tokenRequest);
-    console.log("token", token);
-    return token
+    return this.appService.postAuth(tokenRequest);
   }
 }
