@@ -8,7 +8,7 @@ const TODO_LOTUS_HOST = "ws://localhost:7777/0/node/v0";
 
 async function main() {
   const provider = new NodejsProvider(TODO_LOTUS_HOST);
-  const lotus = new LotusRPC(provider, { schema: schema.testnet.fullNode });
+  const lotus = new LotusRPC(provider, { schema: schema.mainnet.fullNode });
   const list = await lotus.walletList();
   const address = list.find((a) => a.startsWith("t3"));
   console.log("list", list);

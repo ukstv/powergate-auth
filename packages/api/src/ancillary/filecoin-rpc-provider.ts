@@ -7,7 +7,7 @@ export class FilecoinRpcProvider {
 
   constructor(readonly address: string, readonly lotusEndpoint: string) {
     const provider = new NodejsProvider(lotusEndpoint);
-    this.#lotus = new LotusRPC(provider, { schema: schema.testnet.fullNode });
+    this.#lotus = new LotusRPC(provider, { schema: schema.mainnet.fullNode });
   }
 
   async getAccounts() {
