@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import { HolyGrailLayout } from "./holy-grail-layout";
 import * as Ethereum from "../ethereum-connection";
-import { UnreachableCaseError } from "../3id-replacement/unreachable-case-error";
+import { UnreachableCaseError } from "../unreachable-case-error";
 import * as System from "slate-react-system";
 import { useEthereum } from "../ethereum-connection";
 import { useSubject } from "../plumbing/use-subject";
@@ -109,8 +109,6 @@ export function Header(props: React.PropsWithChildren<{}>) {
     <Element>
       <HolyGrailLayout.Main>...</HolyGrailLayout.Main>
       <Right>
-        {/*<ConnectEthereumButton />*/}
-        {/*<CeramicConnectButton />*/}
         <FilecoinAddress />
         <ConnectBackendButton />
       </Right>

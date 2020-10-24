@@ -1,7 +1,7 @@
 import { DID } from "dids";
 import { BehaviorSubject } from "rxjs";
 import * as Ethereum from "./ethereum-connection";
-import { EthereumAuthProvider } from "./3id-replacement/ethereum-auth-provider";
+import { EthereumAuthProvider} from '3id-connect'
 import { filter } from "rxjs/operators";
 import * as sha256 from "@stablelib/sha256";
 import IdentityWallet from "identity-wallet";
@@ -90,14 +90,16 @@ export async function connect(
     ethereum.account
   );
 
-  // get ethereum provider
-  // await threeIdConnect.connect(authProvider);
-  // const didProvider = await threeIdConnect.getDidProvider();
+  // const threeIdConnect = new ThreeIdConnect('https://3idconnect.org/index.html')
   //
-  // const did = new DID({ provider: didProvider });
+  // await threeIdConnect.connect(authProvider)
   //
-  // await did.authenticate();
-  // return did.id
+  // const didProvider = await threeIdConnect.getDidProvider()
+  // const did = new DID({ provider: didProvider })
+  //
+  // await did.authenticate()
+  // console.log(did.id)
+
   const message = "Add this account as a Ceramic authentication method";
   const authSecret = await authProvider.authenticate(message);
   const hex = authSecret.slice(2);

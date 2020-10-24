@@ -3,7 +3,7 @@ import { Jazzicon } from "@ukstv/jazzicon-react";
 import styled from "@emotion/styled";
 import * as System from "slate-react-system";
 import * as CeramicConnection from "../ceramic-connection";
-import { UnreachableCaseError } from "../3id-replacement/unreachable-case-error";
+import { UnreachableCaseError } from "../unreachable-case-error";
 import { useCeramic } from "../ceramic-connection";
 import { useSubject } from "../plumbing/use-subject";
 
